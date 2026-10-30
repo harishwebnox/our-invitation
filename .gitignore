@@ -1,0 +1,8 @@
+*.ps1
+*.bak
+*.txt
+lovable_source.html
+outline_dump.html
+lovable_assets/
+assets_base64.json
+.agents/
