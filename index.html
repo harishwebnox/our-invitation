@@ -99,7 +99,7 @@
 
     .welcome {
       z-index: 50;
-      background: #3e2a18;
+      background: radial-gradient(ellipse at top, #5c121e 0%, #3a0810 55%, #220509 100%);
       place-items: end center;
       display: grid;
       position: fixed;
@@ -111,7 +111,7 @@
     .welcome-video {
       object-fit: cover;
       object-position: center center;
-      background: #3e2a18;
+      background: #3a0810;
       width: 100%;
       height: 100%;
       position: absolute;
@@ -119,35 +119,34 @@
     }
 
     .welcome-shade {
-      background: linear-gradient(rgba(45, 26, 13, 0.02) 0%, rgba(47, 25, 12, 0) 38%, rgba(47, 25, 12, 0.56) 72%, rgba(35, 19, 10, 0.9) 100%);
+      background: linear-gradient(180deg, rgba(85, 16, 27, 0.28) 0%, rgba(65, 12, 21, 0.45) 38%, rgba(55, 9, 18, 0.78) 72%, rgba(35, 5, 10, 0.96) 100%);
       transition: opacity 0.6s;
       position: absolute;
       inset: 0;
       pointer-events: none;
     }
 
-    .intro-playing .welcome-shade {
-      opacity: 0;
+    .intro-playing .welcome-shade,
+    .intro-playing .garland-edge {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
     }
 
     .garland-edge {
       pointer-events: none;
-      border: 1px solid rgba(255, 226, 170, 0.38);
+      border: 1px solid rgba(232, 200, 114, 0.5);
       margin: 12px;
       transition: opacity 0.5s;
       position: absolute;
       inset: 0;
     }
 
-    .intro-playing .garland-edge {
-      opacity: 0;
-    }
-
     .garland-edge:before, .garland-edge:after {
       content: "❀  ❀  ❀  ❀  ❀  ❀  ❀";
-      color: #fff0c9;
+      color: #ffe6ad;
       letter-spacing: 5px;
-      filter: drop-shadow(0 2px 2px #654);
+      filter: drop-shadow(0 2px 4px rgba(45, 6, 12, 0.8));
       white-space: nowrap;
       font-size: 18px;
       position: absolute;
@@ -172,68 +171,79 @@
       padding: 28px 24px max(30px, env(safe-area-inset-bottom));
       text-align: center;
       color: var(--ivory);
-      text-shadow: 0 2px 8px #2b170d;
+      text-shadow: 0 2px 12px rgba(25, 4, 8, 0.95);
       animation: 0.9s 0.25s both welcomeCopyIn;
       position: relative;
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
-    .welcome-card.is-open {
-      opacity: 0;
-      transform: scale(1.04);
-      pointer-events: none;
+    .welcome-card.is-open,
+    .intro-playing .welcome-card {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
     }
 
     .welcome-names small {
       text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: #f5d99e;
+      letter-spacing: 0.2em;
+      color: #f3d48d;
       font-size: 11px;
+      font-weight: 600;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
     }
 
     .welcome-names h1 {
       margin: 10px 0 7px;
       font: 48px/0.95 "Italiana", "Cormorant Garamond", Georgia, serif;
+      color: #fff4db;
+      text-shadow: 0 3px 14px rgba(0, 0, 0, 0.95);
     }
 
     .welcome-names h1 i {
-      color: #efbd65;
+      color: #f3d48d;
       font: 400 36px "Parisienne", cursive;
     }
 
     .welcome-names p {
       margin: 0 0 8px;
       font: 20px "Parisienne", cursive;
+      color: #fdecd2;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
     }
 
     .welcome-names span {
-      letter-spacing: 0.18em;
+      letter-spacing: 0.2em;
       font-size: 13px;
-      color: #f5d99e;
+      color: #f3d48d;
+      font-weight: 600;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
     }
 
     .open-invite {
       width: min(100%, 360px);
       min-height: 62px;
-      color: var(--ink);
+      color: #fff4db;
       text-shadow: none;
       text-align: left;
       cursor: pointer;
-      background: rgba(255, 242, 214, 0.94);
-      border: 1px solid rgba(255, 225, 169, 0.8);
+      background: linear-gradient(135deg, #681724 0%, #3e0911 100%);
+      border: 1.5px solid rgba(232, 200, 114, 0.85);
       border-radius: 999px;
       align-content: center;
       margin: 22px auto 0;
       padding: 8px 16px 8px 67px;
       display: grid;
       position: relative;
-      box-shadow: 0 12px 30px rgba(21, 11, 5, 0.28);
-      transition: transform 0.2s, background-color 0.2s;
+      box-shadow: 0 12px 32px rgba(18, 2, 5, 0.65), 0 0 16px rgba(216, 190, 138, 0.25);
+      transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
     }
 
     .open-invite:hover {
-      background: #fff8eb;
+      background: linear-gradient(135deg, #781c2b 0%, #4a0c16 100%);
       transform: scale(1.02);
+      box-shadow: 0 14px 36px rgba(18, 2, 5, 0.75), 0 0 20px rgba(216, 190, 138, 0.4);
     }
 
     .open-invite:active {
@@ -243,29 +253,31 @@
     .open-invite .seal {
       width: 48px;
       height: 48px;
-      color: var(--ivory);
-      background: linear-gradient(145deg, #d47b8e, #9d405d);
+      color: #3e0911;
+      background: linear-gradient(145deg, #f5d99e, #caa453);
       border-radius: 50%;
       place-items: center;
       display: grid;
       position: absolute;
       top: 7px;
       left: 7px;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35), 0 2px 7px rgba(75, 31, 39, 0.35);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5), 0 2px 8px rgba(20, 3, 6, 0.5);
       font-size: 22px;
     }
 
     .open-invite b {
       letter-spacing: 0.04em;
       font-size: 14px;
+      color: #fff4db;
     }
 
     .open-invite small {
       text-transform: uppercase;
       letter-spacing: 0.16em;
-      color: #8c653f;
+      color: #f3d48d;
       margin-top: 2px;
       font-size: 9px;
+      font-weight: 600;
     }
 
     .skip-intro {
@@ -276,11 +288,11 @@
       backdrop-filter: blur(8px);
       min-width: 88px;
       min-height: 44px;
-      color: var(--ivory);
+      color: #fff4db;
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      background: rgba(54, 32, 17, 0.55);
-      border: 1px solid rgba(255, 242, 214, 0.45);
+      background: rgba(58, 9, 17, 0.75);
+      border: 1px solid rgba(232, 200, 114, 0.65);
       border-radius: 999px;
       font-size: 11px;
       position: absolute;
@@ -289,7 +301,7 @@
     }
 
     .skip-intro:hover {
-      background: rgba(54, 32, 17, 0.85);
+      background: rgba(78, 14, 24, 0.95);
       transform: scale(1.05);
     }
 
@@ -617,10 +629,10 @@
     <div class="mt-14 space-y-10 text-left">
       <!-- Card 1: The First Glance -->
       <div class="group flex flex-col md:flex-row items-center gap-6 md:gap-8 rounded-3xl border border-gold/40 bg-card/90 p-5 md:p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:border-gold hover:shadow-xl">
-        <div class="w-full md:w-1/2 overflow-hidden rounded-2xl border border-gold/50 shadow-inner">
-          <img src="assets/our-story/story-1.png" alt="The First Glance" class="w-full h-56 md:h-64 object-cover object-center group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+        <div class="w-full md:w-1/2 overflow-hidden rounded-2xl border border-gold/50 shadow-inner flex items-center justify-center bg-card/40">
+          <img src="assets/our-story/story-1.png" alt="The First Glance" class="w-full aspect-square object-cover object-center group-hover:scale-105 transition-transform duration-700" loading="lazy" />
         </div>
-        <div class="w-full md:w-1/2 text-center md:text-left px-2">
+        <div class="w-full md:w-1/2 text-center md:text-left px-2 sm:px-4">
           <span class="inline-block px-3 py-1 text-xs font-semibold tracking-widest uppercase text-gold bg-primary/10 rounded-full border border-gold/30">
             2021 &bull; Anna University
           </span>
@@ -633,30 +645,12 @@
         </div>
       </div>
 
-      <!-- Card 2: Growing Together (Alternating layout) -->
-      <div class="group flex flex-col md:flex-row-reverse items-center gap-6 md:gap-8 rounded-3xl border border-gold/40 bg-card/90 p-5 md:p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:border-gold hover:shadow-xl">
-        <div class="w-full md:w-1/2 overflow-hidden rounded-2xl border border-gold/50 shadow-inner">
-          <img src="assets/our-story/Story-2.png" alt="Growing Together" class="w-full h-56 md:h-64 object-cover object-center group-hover:scale-105 transition-transform duration-700" loading="lazy" />
-        </div>
-        <div class="w-full md:w-1/2 text-center md:text-left px-2">
-          <span class="inline-block px-3 py-1 text-xs font-semibold tracking-widest uppercase text-gold bg-primary/10 rounded-full border border-gold/30">
-            2023 &bull; Friendship to Love
-          </span>
-          <h3 class="mt-3 font-display text-2xl md:text-3xl font-bold text-primary">
-            Growing Together
-          </h3>
-          <p class="mt-3 text-sm md:text-base leading-relaxed text-muted-foreground">
-            Hello became friendship, and friendship seamlessly blossomed into love. Through laughter, shared dreams, and quiet understanding, we found our forever home in each other.
-          </p>
-        </div>
-      </div>
-
-      <!-- Card 3: The Proposal -->
+      <!-- Card 2: The Proposal -->
       <div class="group flex flex-col md:flex-row items-center gap-6 md:gap-8 rounded-3xl border border-gold/40 bg-card/90 p-5 md:p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:border-gold hover:shadow-xl">
-        <div class="w-full md:w-1/2 overflow-hidden rounded-2xl border border-gold/50 shadow-inner">
-          <img src="assets/our-story/Proposal.png" alt="The Proposal" class="w-full h-56 md:h-64 object-cover object-center group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+        <div class="w-full md:w-1/2 overflow-hidden rounded-2xl border border-gold/50 shadow-inner flex items-center justify-center bg-card/40">
+          <img src="assets/our-story/Proposal.png" alt="A Lifetime Promise" class="w-full aspect-square object-cover object-center group-hover:scale-105 transition-transform duration-700" loading="lazy" />
         </div>
-        <div class="w-full md:w-1/2 text-center md:text-left px-2">
+        <div class="w-full md:w-1/2 text-center md:text-left px-2 sm:px-4">
           <span class="inline-block px-3 py-1 text-xs font-semibold tracking-widest uppercase text-gold bg-primary/10 rounded-full border border-gold/30">
             2025 &bull; The Promise
           </span>
@@ -669,12 +663,12 @@
         </div>
       </div>
 
-      <!-- Card 4: Forever Begins (Alternating layout) -->
-      <div class="group flex flex-col md:flex-row-reverse items-center gap-6 md:gap-8 rounded-3xl border border-gold/40 bg-card/90 p-5 md:p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:border-gold hover:shadow-xl">
-        <div class="w-full md:w-1/2 overflow-hidden rounded-2xl border border-gold/50 shadow-inner">
-          <img src="assets/our-story/Story-3.png" alt="Forever Begins" class="w-full h-56 md:h-64 object-cover object-center group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+      <!-- Card 3: Forever Begins -->
+      <div class="group flex flex-col md:flex-row items-center gap-6 md:gap-8 rounded-3xl border border-gold/40 bg-card/90 p-5 md:p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:border-gold hover:shadow-xl">
+        <div class="w-full md:w-1/2 overflow-hidden rounded-2xl border border-gold/50 shadow-inner flex items-center justify-center bg-card/40">
+          <img src="assets/our-story/Story-3.png" alt="Forever Begins" class="w-full aspect-square object-cover object-center group-hover:scale-105 transition-transform duration-700" loading="lazy" />
         </div>
-        <div class="w-full md:w-1/2 text-center md:text-left px-2">
+        <div class="w-full md:w-1/2 text-center md:text-left px-2 sm:px-4">
           <span class="inline-block px-3 py-1 text-xs font-semibold tracking-widest uppercase text-gold bg-primary/10 rounded-full border border-gold/30">
             2026 &bull; Sacred Union
           </span>
@@ -689,19 +683,25 @@
     </div>
 
     <!-- Parents' Blessings -->
-    <div class="mt-14 grid gap-6 sm:grid-cols-2">
-      <div class="rounded-2xl border border-gold/30 bg-card p-6 shadow-sm">
-        <p class="eyebrow text-gold">Groom's Parents</p>
-        <p class="mt-2 font-display text-2xl text-primary">Chinnadurai &amp; Jayanthi</p>
-      </div>
-      <div class="rounded-2xl border border-gold/30 bg-card p-6 shadow-sm">
-        <p class="eyebrow text-gold">Bride's Parents</p>
-        <p class="mt-2 font-display text-2xl text-primary">Chandra Sekaran &amp; Bhuvaneshwari</p>
+    <div class="mt-14">
+      <p class="eyebrow text-gold text-xs tracking-widest uppercase">With the Sacred Blessings of Our Families</p>
+      <div class="mt-6 grid gap-6 sm:grid-cols-2">
+        <div class="flex flex-col items-center justify-center rounded-2xl border border-gold/40 bg-card/90 p-6 text-center shadow-md backdrop-blur-sm transition hover:border-gold">
+          <span class="text-2xl mb-2" aria-hidden="true">🪔</span>
+          <p class="eyebrow text-gold text-xs tracking-widest uppercase">Groom's Parents</p>
+          <p class="mt-2 font-display text-2xl font-bold text-primary">Chinnadurai &amp; Jayanthi</p>
+        </div>
+        <div class="flex flex-col items-center justify-center rounded-2xl border border-gold/40 bg-card/90 p-6 text-center shadow-md backdrop-blur-sm transition hover:border-gold">
+          <span class="text-2xl mb-2" aria-hidden="true">🪔</span>
+          <p class="eyebrow text-gold text-xs tracking-widest uppercase">Bride's Parents</p>
+          <p class="mt-2 font-display text-2xl font-bold text-primary">Chandra Sekaran &amp; Bhuvaneshwari</p>
+        </div>
       </div>
     </div>
 
-    <blockquote class="bg-maroon mt-12 rounded-3xl px-8 py-10 font-display text-2xl md:text-3xl italic text-primary-foreground shadow-xl border border-gold/30" style="margin-top: 3rem; margin-bottom: 2.5rem;">
-      "Love brought us together. Family and faith bless us forever."
+    <!-- Quote Block -->
+    <blockquote class="bg-maroon mt-10 rounded-2xl px-6 py-8 md:px-10 md:py-9 font-display text-xl md:text-2xl italic text-primary-foreground shadow-xl border border-gold/40 text-center">
+      &ldquo;Love brought us together. Family and faith bless us forever.&rdquo;
     </blockquote>
   </section>
 
@@ -881,8 +881,15 @@
 
   if (openBtn && welcomeScreen) {
     openBtn.addEventListener('click', function() {
-      if (welcomeCard) welcomeCard.classList.add('is-open');
+      if (welcomeCard) {
+        welcomeCard.classList.add('is-open');
+        welcomeCard.style.display = 'none';
+      }
       welcomeScreen.classList.add('intro-playing');
+      var shade = welcomeScreen.querySelector('.welcome-shade');
+      if (shade) shade.style.display = 'none';
+      var garland = welcomeScreen.querySelector('.garland-edge');
+      if (garland) garland.style.display = 'none';
       if (skipBtn) skipBtn.style.display = 'block';
 
       if (welcomeVideo) {
