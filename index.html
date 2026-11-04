@@ -86,6 +86,11 @@
       .nav-links-wrap a { margin-left: 12px; font-size: 11px; letter-spacing: 1px; }
     }
 
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
+    }
+
     /* Enhanced Hero Text Visibility Overlay */
     .hero-text-shadow {
       text-shadow: 0 2px 10px rgba(0, 0, 0, 0.75);
@@ -99,13 +104,96 @@
 
     .welcome {
       z-index: 50;
-      background: radial-gradient(ellipse at top, #5c121e 0%, #3a0810 55%, #220509 100%);
-      place-items: end center;
-      display: grid;
+      background: radial-gradient(circle at center, #4d0e19 0%, #29060d 55%, #140206 100%);
       position: fixed;
       inset: 0;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+    }
+
+    .welcome::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at top, rgba(100, 20, 32, 0.45) 0%, rgba(20, 3, 6, 0.95) 100%);
+      pointer-events: none;
+    }
+
+    /* Envelope Stage: Responsive across Mobile, Tablet, Desktop */
+    .welcome-stage {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      overflow: hidden;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    /* Mobile (~380px up to 767px): Preserves exact full-bleed look and feel */
+    @media (max-width: 767px) {
+      .welcome {
+        display: grid;
+        place-items: end center;
+      }
+      .welcome-stage {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+      }
+    }
+
+    /* Tablet (~768px): Centered envelope with sensible size */
+    @media (min-width: 768px) and (max-width: 1279px) {
+      .welcome {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .welcome-stage {
+        width: min(90vw, 440px);
+        height: min(88vh, 760px);
+        border-radius: 28px;
+        border: 2px solid rgba(232, 200, 114, 0.7);
+        box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.9), 0 0 35px rgba(212, 175, 55, 0.25);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .welcome-stage:hover:not(.intro-playing) {
+        transform: scale(1.015);
+        box-shadow: 0 30px 70px -10px rgba(0, 0, 0, 0.95), 0 0 45px rgba(212, 175, 55, 0.35);
+      }
+    }
+
+    /* Desktop (1280px and above, up to 1920px) */
+    @media (min-width: 1280px) {
+      .welcome {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+      }
+      .welcome-stage {
+        width: 460px;
+        height: min(88vh, 800px);
+        border-radius: 30px;
+        border: 2px solid rgba(232, 200, 114, 0.75);
+        box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.95), 0 0 50px rgba(212, 175, 55, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .welcome-stage:hover:not(.intro-playing) {
+        transform: scale(1.02);
+        box-shadow: 0 35px 90px -15px rgba(0, 0, 0, 1), 0 0 60px rgba(212, 175, 55, 0.4);
+      }
     }
 
     .welcome-video {
@@ -119,6 +207,7 @@
       left: 0;
       transform: scale(1.12);
       transform-origin: center 22%;
+      pointer-events: none;
     }
 
     .welcome-shade {
@@ -143,6 +232,7 @@
       transition: opacity 0.5s;
       position: absolute;
       inset: 0;
+      border-radius: inherit;
     }
 
     .garland-edge:before, .garland-edge:after {
@@ -171,7 +261,7 @@
     .welcome-card {
       z-index: 2;
       width: 100%;
-      padding: 28px 24px max(30px, env(safe-area-inset-bottom));
+      padding: 24px 20px max(24px, env(safe-area-inset-bottom));
       text-align: center;
       color: var(--ivory);
       text-shadow: 0 2px 12px rgba(25, 4, 8, 0.95);
@@ -321,11 +411,23 @@
 
     /* Atmosphere Lanterns & Flames (from lantern-madurai) */
     .lantern-atmosphere {
-      z-index: 15;
+      z-index: 1;
       pointer-events: none;
       position: absolute;
       inset: 0;
       overflow: hidden;
+    }
+
+    @media (max-width: 1199px) {
+      .lantern-atmosphere {
+        display: none; /* Hide on mobile/tablet to avoid overlapping cards/text */
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .lantern-atmosphere {
+        display: block;
+      }
     }
 
     .atmos-lantern {
@@ -473,38 +575,40 @@
 
   <!-- 1. Video / Animated Welcome Screen (with Skip Intro) -->
   <div id="welcome-screen" class="welcome">
-    <video
-      id="welcome-video"
-      class="welcome-video"
-      muted
-      playsinline
-      preload="auto"
-      poster="assets/entrance-first-frame.png"
-      aria-label="Wedding invitation opening video"
-    >
-      <source src="assets/aarav-ananya-opening.mp4" type="video/mp4" />
-    </video>
-    <div class="welcome-shade"></div>
-    <div class="garland-edge"></div>
+    <div id="welcome-stage" class="welcome-stage" role="button" tabindex="0" aria-label="Open Harish and Chandra Vathana's invitation">
+      <video
+        id="welcome-video"
+        class="welcome-video"
+        muted
+        playsinline
+        preload="auto"
+        poster="assets/entrance-first-frame.png"
+        aria-label="Wedding invitation opening video"
+      >
+        <source src="assets/aarav-ananya-opening.mp4" type="video/mp4" />
+      </video>
+      <div class="welcome-shade"></div>
+      <div class="garland-edge"></div>
 
-    <div id="welcome-card" class="welcome-card">
-      <div class="welcome-names">
-        <small>Together with our families</small>
-        <h1>Harish <i>&amp;</i> Chandra Vathana</h1>
-        <p>invite you to celebrate their wedding</p>
-        <span>22 · 11 · 2026</span>
+      <div id="welcome-card" class="welcome-card">
+        <div class="welcome-names">
+          <small>Together with our families</small>
+          <h1>Harish <i>&amp;</i> Chandra Vathana</h1>
+          <p>invite you to celebrate their wedding</p>
+          <span>22 · 11 · 2026</span>
+        </div>
+
+        <button id="open-invite-btn" class="open-invite" type="button" aria-label="Open Harish and Chandra Vathana's invitation">
+          <span class="seal">🪔</span>
+          <b>Open our invitation</b>
+          <small>Tap to enter</small>
+        </button>
       </div>
 
-      <button id="open-invite-btn" class="open-invite" type="button" aria-label="Open Harish and Chandra Vathana's invitation">
-        <span class="seal">🪔</span>
-        <b>Open our invitation</b>
-        <small>Tap to enter</small>
+      <button id="skip-intro-btn" class="skip-intro" type="button" style="display: none;">
+        Skip intro
       </button>
     </div>
-
-    <button id="skip-intro-btn" class="skip-intro" type="button" style="display: none;">
-      Skip intro
-    </button>
   </div>
 
   <!-- Atmosphere Lanterns: Parallax Floating Lamps with Animated Flickering Flames -->
@@ -622,79 +726,79 @@
   </section>
 
   <!-- 3. Royal Story Timeline Section (Adapted from rajwada-royale with User's Story Images) -->
-  <section id="story" class="mx-auto max-w-4xl px-6 py-24 text-center" style="padding-top: 5rem; padding-bottom: 5rem;">
+  <section id="story" class="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 py-20 sm:py-24 text-center">
     <p class="text-4xl text-accent" aria-hidden="true">🪷</p>
     <p class="eyebrow mt-3 text-gold">Two Hearts, One Beautiful Beginning</p>
-    <h2 class="mt-3 text-5xl uppercase tracking-widest text-primary font-display">Our Story</h2>
+    <h2 class="mt-3 text-4xl sm:text-5xl uppercase tracking-widest text-primary font-display">Our Story</h2>
     <p class="mt-2 text-sm italic text-muted-foreground">The journey of how our two souls found each other</p>
 
-    <!-- Multi-Step Chronological Royal Story Timeline Cards -->
-    <div class="mt-14 space-y-10 text-left">
+    <!-- Multi-Step Chronological Royal Story Timeline Cards (Equal 3-Column Desktop Grid) -->
+    <div class="mt-12 sm:mt-14 grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
       <!-- Card 1: The First Glance -->
-      <div class="group flex flex-col md:flex-row items-center gap-6 md:gap-8 rounded-3xl border border-gold/40 bg-card/90 p-5 md:p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:border-gold hover:shadow-xl">
-        <div class="w-full md:w-1/2 overflow-hidden rounded-2xl border border-gold/50 shadow-inner flex items-center justify-center bg-card/40">
-          <img src="assets/our-story/story-1.png" alt="The First Glance" class="w-full aspect-square object-cover object-center group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+      <article class="group flex flex-col h-full rounded-3xl border border-gold/40 bg-card/95 p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:border-gold hover:shadow-xl relative z-10">
+        <div class="w-full aspect-[4/3] overflow-hidden rounded-2xl border border-gold/50 shadow-inner bg-card/40 shrink-0">
+          <img src="assets/our-story/story-1.png" alt="The First Glance" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" loading="lazy" />
         </div>
-        <div class="w-full md:w-1/2 text-center md:text-left px-2 sm:px-4">
-          <span class="inline-block px-3 py-1 text-xs font-semibold tracking-widest uppercase text-gold bg-primary/10 rounded-full border border-gold/30">
-            2021 &bull; Anna University
+        <div class="flex-1 flex flex-col items-center text-center mt-5 px-2 sm:px-3">
+          <span class="inline-block px-3.5 py-1 text-xs font-semibold tracking-widest uppercase text-gold bg-primary/10 rounded-full border border-gold/30">
+            2022 • ANNA UNIVERSITY
           </span>
-          <h3 class="mt-3 font-display text-2xl md:text-3xl font-bold text-primary">
+          <h3 class="mt-3.5 font-display text-2xl lg:text-3xl font-bold text-primary">
             The First Glance
           </h3>
-          <p class="mt-3 text-sm md:text-base leading-relaxed text-muted-foreground">
-            It began with a simple hello at Anna University. That serendipitous meeting sparked conversations that refused to end, slowly weaving our lives together.
+          <p class="mt-3 text-sm leading-relaxed text-muted-foreground px-2 sm:px-3">
+            It began with a simple hello at Anna University. That hello turned into friendship, and slowly we became the best of friends. Our conversations never seemed to end, and without knowing it, our lives were already coming together.
           </p>
         </div>
-      </div>
+      </article>
 
       <!-- Card 2: The Proposal -->
-      <div class="group flex flex-col md:flex-row items-center gap-6 md:gap-8 rounded-3xl border border-gold/40 bg-card/90 p-5 md:p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:border-gold hover:shadow-xl">
-        <div class="w-full md:w-1/2 overflow-hidden rounded-2xl border border-gold/50 shadow-inner flex items-center justify-center bg-card/40">
-          <img src="assets/our-story/Proposal.png" alt="A Lifetime Promise" class="w-full aspect-square object-cover object-center group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+      <article class="group flex flex-col h-full rounded-3xl border border-gold/40 bg-card/95 p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:border-gold hover:shadow-xl relative z-10">
+        <div class="w-full aspect-[4/3] overflow-hidden rounded-2xl border border-gold/50 shadow-inner bg-card/40 shrink-0">
+          <img src="assets/our-story/Proposal.png" alt="A Lifetime Promise" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" loading="lazy" />
         </div>
-        <div class="w-full md:w-1/2 text-center md:text-left px-2 sm:px-4">
-          <span class="inline-block px-3 py-1 text-xs font-semibold tracking-widest uppercase text-gold bg-primary/10 rounded-full border border-gold/30">
-            2025 &bull; The Promise
+        <div class="flex-1 flex flex-col items-center text-center mt-5 px-2 sm:px-3">
+          <span class="inline-block px-3.5 py-1 text-xs font-semibold tracking-widest uppercase text-gold bg-primary/10 rounded-full border border-gold/30">
+            2024 • THE PROPOSAL
           </span>
-          <h3 class="mt-3 font-display text-2xl md:text-3xl font-bold text-primary">
+          <h3 class="mt-3.5 font-display text-2xl lg:text-3xl font-bold text-primary">
             A Lifetime Promise
           </h3>
-          <p class="mt-3 text-sm md:text-base leading-relaxed text-muted-foreground">
-            With hearts full of devotion, a special promise was made under the stars. A heartfelt question, a joyful &apos;Yes&apos;, and two souls committed to walking hand in hand for eternity.
+          <p class="mt-3 text-sm leading-relaxed text-muted-foreground px-2 sm:px-3">
+            Somewhere between the late talks and shared dreams, our friendship quietly became love. In 2024, on an ordinary bus ride, he went down on one knee with a ring in his hand. She covered her smile with both hands and said a happy &quot;Yes&quot;. It was a simple place, and it became our most special memory.
           </p>
         </div>
-      </div>
+      </article>
 
       <!-- Card 3: Forever Begins -->
-      <div class="group flex flex-col md:flex-row items-center gap-6 md:gap-8 rounded-3xl border border-gold/40 bg-card/90 p-5 md:p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:border-gold hover:shadow-xl">
-        <div class="w-full md:w-1/2 overflow-hidden rounded-2xl border border-gold/50 shadow-inner flex items-center justify-center bg-card/40">
-          <img src="assets/our-story/Story-3.png" alt="Forever Begins" class="w-full aspect-square object-cover object-center group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+      <article class="group flex flex-col h-full rounded-3xl border border-gold/40 bg-card/95 p-6 shadow-md backdrop-blur-sm transition-all duration-300 hover:border-gold hover:shadow-xl relative z-10">
+        <div class="w-full aspect-[4/3] overflow-hidden rounded-2xl border border-gold/50 shadow-inner bg-card/40 shrink-0">
+          <img src="assets/our-story/Story-3.png" alt="Forever Begins" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" loading="lazy" />
         </div>
-        <div class="w-full md:w-1/2 text-center md:text-left px-2 sm:px-4">
-          <span class="inline-block px-3 py-1 text-xs font-semibold tracking-widest uppercase text-gold bg-primary/10 rounded-full border border-gold/30">
-            2026 &bull; Sacred Union
+        <div class="flex-1 flex flex-col items-center text-center mt-5 px-2 sm:px-3">
+          <span class="inline-block px-3.5 py-1 text-xs font-semibold tracking-widest uppercase text-gold bg-primary/10 rounded-full border border-gold/30">
+            2026 • SACRED UNION
           </span>
-          <h3 class="mt-3 font-display text-2xl md:text-3xl font-bold text-primary">
+          <h3 class="mt-3.5 font-display text-2xl lg:text-3xl font-bold text-primary">
             Forever Begins
           </h3>
-          <p class="mt-3 text-sm md:text-base leading-relaxed text-muted-foreground">
-            With the sacred blessings of our elders and the divine grace of Perur Pateeswarar, we step forward to begin our happily ever after on 22 November 2026.
+          <p class="mt-3 text-sm leading-relaxed text-muted-foreground px-2 sm:px-3">
+            With our families&apos; blessings, we got engaged and made our love official. Now, with the blessings of our elders and Perur Pateeswarar, we begin our life together on 22 November 2026.
           </p>
         </div>
-      </div>
+      </article>
     </div>
 
     <!-- Parents' Blessings -->
-    <div class="mt-14">
-      <p class="eyebrow text-gold text-xs tracking-widest uppercase">With the Sacred Blessings of Our Families</p>
-      <div class="mt-6 grid gap-6 sm:grid-cols-2">
-        <div class="flex flex-col items-center justify-center rounded-2xl border border-gold/40 bg-card/90 p-6 text-center shadow-md backdrop-blur-sm transition hover:border-gold">
+    <div class="mt-20 sm:mt-24">
+      <p class="eyebrow text-gold text-xs sm:text-sm tracking-[0.2em] uppercase font-semibold">With the Sacred Blessings of Our Families</p>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 max-w-3xl mx-auto">
+        <div class="flex flex-col items-center justify-center rounded-2xl border border-gold/40 bg-card/95 p-6 sm:p-8 text-center shadow-md backdrop-blur-sm transition hover:border-gold">
           <span class="text-2xl mb-2" aria-hidden="true">🪔</span>
           <p class="eyebrow text-gold text-xs tracking-widest uppercase">Groom's Parents</p>
           <p class="mt-2 font-display text-2xl font-bold text-primary">Chinnadurai &amp; Jayanthi</p>
         </div>
-        <div class="flex flex-col items-center justify-center rounded-2xl border border-gold/40 bg-card/90 p-6 text-center shadow-md backdrop-blur-sm transition hover:border-gold">
+        <div class="flex flex-col items-center justify-center rounded-2xl border border-gold/40 bg-card/95 p-6 sm:p-8 text-center shadow-md backdrop-blur-sm transition hover:border-gold">
           <span class="text-2xl mb-2" aria-hidden="true">🪔</span>
           <p class="eyebrow text-gold text-xs tracking-widest uppercase">Bride's Parents</p>
           <p class="mt-2 font-display text-2xl font-bold text-primary">Chandra Sekaran &amp; Bhuvaneshwari</p>
@@ -703,7 +807,7 @@
     </div>
 
     <!-- Quote Block -->
-    <blockquote class="bg-maroon mt-10 rounded-2xl px-6 py-8 md:px-10 md:py-9 font-display text-xl md:text-2xl italic text-primary-foreground shadow-xl border border-gold/40 text-center">
+    <blockquote class="bg-maroon mt-14 sm:mt-16 max-w-3xl mx-auto rounded-2xl px-6 py-8 md:px-10 md:py-9 font-display text-xl md:text-2xl italic text-primary-foreground shadow-xl border border-gold/40 text-center">
       &ldquo;Love brought us together. Family and faith bless us forever.&rdquo;
     </blockquote>
   </section>
@@ -860,10 +964,49 @@
   /* 2. Opening Video & Animated Welcome Screen Logic (from lantern-madurai) */
   var openBtn = document.getElementById('open-invite-btn');
   var welcomeScreen = document.getElementById('welcome-screen');
+  var welcomeStage = document.getElementById('welcome-stage');
   var welcomeCard = document.getElementById('welcome-card');
   var welcomeVideo = document.getElementById('welcome-video');
   var skipBtn = document.getElementById('skip-intro-btn');
+  var introStarted = false;
   var introFinished = false;
+
+  function startIntro() {
+    if (introStarted || introFinished) return;
+    introStarted = true;
+
+    if (welcomeStage) {
+      welcomeStage.classList.add('intro-playing');
+      welcomeStage.style.cursor = 'default';
+    }
+    if (welcomeCard) {
+      welcomeCard.classList.add('is-open');
+      welcomeCard.style.display = 'none';
+    }
+    if (welcomeScreen) {
+      welcomeScreen.classList.add('intro-playing');
+      var shade = welcomeScreen.querySelector('.welcome-shade');
+      if (shade) shade.style.display = 'none';
+      var garland = welcomeScreen.querySelector('.garland-edge');
+      if (garland) garland.style.display = 'none';
+    }
+    if (skipBtn) skipBtn.style.display = 'block';
+
+    if (welcomeVideo) {
+      welcomeVideo.currentTime = 0;
+      var playPromise = welcomeVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(function(err) {
+          console.log('Video play interrupted or blocked:', err);
+          finishIntro();
+        });
+      }
+      welcomeVideo.addEventListener('ended', finishIntro);
+    } else {
+      finishIntro();
+    }
+    playBGM();
+  }
 
   function finishIntro() {
     if (introFinished) return;
@@ -872,45 +1015,53 @@
       try { welcomeVideo.pause(); } catch(e) {}
     }
     if (welcomeScreen) {
+      welcomeScreen.style.pointerEvents = 'none';
       welcomeScreen.style.transition = 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s';
       welcomeScreen.style.opacity = '0';
       welcomeScreen.style.visibility = 'hidden';
       setTimeout(function() {
-        if (welcomeScreen.parentNode) welcomeScreen.parentNode.removeChild(welcomeScreen);
+        if (welcomeScreen && welcomeScreen.parentNode) {
+          welcomeScreen.parentNode.removeChild(welcomeScreen);
+        }
       }, 850);
     }
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
     playBGM();
   }
 
-  if (openBtn && welcomeScreen) {
-    openBtn.addEventListener('click', function() {
-      if (welcomeCard) {
-        welcomeCard.classList.add('is-open');
-        welcomeCard.style.display = 'none';
-      }
-      welcomeScreen.classList.add('intro-playing');
-      var shade = welcomeScreen.querySelector('.welcome-shade');
-      if (shade) shade.style.display = 'none';
-      var garland = welcomeScreen.querySelector('.garland-edge');
-      if (garland) garland.style.display = 'none';
-      if (skipBtn) skipBtn.style.display = 'block';
+  if (openBtn) {
+    openBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      startIntro();
+    });
+  }
 
-      if (welcomeVideo) {
-        welcomeVideo.currentTime = 0;
-        welcomeVideo.play().catch(function(err) {
-          console.log('Video play interrupted or blocked:', err);
-          finishIntro();
-        });
-        welcomeVideo.addEventListener('ended', finishIntro);
-      } else {
-        finishIntro();
+  if (welcomeCard) {
+    welcomeCard.addEventListener('click', function(e) {
+      startIntro();
+    });
+  }
+
+  if (welcomeStage) {
+    welcomeStage.addEventListener('click', function(e) {
+      if (!introStarted) {
+        startIntro();
       }
-      playBGM();
+    });
+    welcomeStage.addEventListener('keydown', function(e) {
+      if ((e.key === 'Enter' || e.key === ' ') && !introStarted) {
+        e.preventDefault();
+        startIntro();
+      }
     });
   }
 
   if (skipBtn) {
-    skipBtn.addEventListener('click', finishIntro);
+    skipBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      finishIntro();
+    });
   }
 
   /* Parallax Scroll for Atmosphere Lanterns (from lantern-madurai) */
