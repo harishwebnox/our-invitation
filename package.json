@@ -1,0 +1,15 @@
+{
+  "name": "harish-chandra-wedding-invitation",
+  "version": "1.0.0",
+  "description": "Wedding Invitation Website for Harish & Chandra Vathana - Sunday 22 November 2026",
+  "scripts": {
+    "start": "npx serve .",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "wedding",
+    "invitation"
+  ],
+  "author": "Harish",
+  "license": "MIT"
+}
