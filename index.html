@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
@@ -994,6 +994,7 @@
 
     if (welcomeVideo) {
       welcomeVideo.currentTime = 0;
+      welcomeVideo.playbackRate = 1.35;
       var playPromise = welcomeVideo.play();
       if (playPromise !== undefined) {
         playPromise.catch(function(err) {
@@ -1001,7 +1002,16 @@
           finishIntro();
         });
       }
+      var onVideoTime = function() {
+        if (welcomeVideo.currentTime >= 4.5) {
+          welcomeVideo.removeEventListener('timeupdate', onVideoTime);
+          finishIntro();
+        }
+      };
+      welcomeVideo.addEventListener('timeupdate', onVideoTime);
       welcomeVideo.addEventListener('ended', finishIntro);
+    } else {
+      finishIntro();
     } else {
       finishIntro();
     }
