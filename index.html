@@ -977,7 +977,7 @@
 
     if (welcomeStage) {
       welcomeStage.classList.add('intro-playing');
-      welcomeStage.style.cursor = 'default';
+      welcomeStage.style.cursor = 'pointer';
     }
     if (welcomeCard) {
       welcomeCard.classList.add('is-open');
@@ -992,6 +992,10 @@
     }
     if (skipBtn) skipBtn.style.display = 'block';
 
+    var fallbackTimer = setTimeout(function() {
+      finishIntro();
+    }, 3600);
+
     if (welcomeVideo) {
       welcomeVideo.currentTime = 0;
       welcomeVideo.playbackRate = 1.35;
@@ -999,20 +1003,24 @@
       if (playPromise !== undefined) {
         playPromise.catch(function(err) {
           console.log('Video play interrupted or blocked:', err);
+          clearTimeout(fallbackTimer);
           finishIntro();
         });
       }
       var onVideoTime = function() {
-        if (welcomeVideo.currentTime >= 4.5) {
+        if (welcomeVideo.currentTime >= 3.8) {
           welcomeVideo.removeEventListener('timeupdate', onVideoTime);
+          clearTimeout(fallbackTimer);
           finishIntro();
         }
       };
       welcomeVideo.addEventListener('timeupdate', onVideoTime);
-      welcomeVideo.addEventListener('ended', finishIntro);
+      welcomeVideo.addEventListener('ended', function() {
+        clearTimeout(fallbackTimer);
+        finishIntro();
+      });
     } else {
-      finishIntro();
-    } else {
+      clearTimeout(fallbackTimer);
       finishIntro();
     }
     playBGM();
