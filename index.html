@@ -942,11 +942,11 @@
 
     var fallbackTimer = setTimeout(function() {
       finishIntro();
-    }, 3600);
+    }, 2000);
 
     if (welcomeVideo) {
       welcomeVideo.currentTime = 0;
-      welcomeVideo.playbackRate = 1.35;
+      welcomeVideo.playbackRate = 1.75;
       var playPromise = welcomeVideo.play();
       if (playPromise !== undefined) {
         playPromise.catch(function(err) {
@@ -956,7 +956,7 @@
         });
       }
       var onVideoTime = function() {
-        if (welcomeVideo.currentTime >= 3.8) {
+        if (welcomeVideo.currentTime >= 2.5) {
           welcomeVideo.removeEventListener('timeupdate', onVideoTime);
           clearTimeout(fallbackTimer);
           finishIntro();
@@ -982,14 +982,14 @@
     }
     if (welcomeScreen) {
       welcomeScreen.style.pointerEvents = 'none';
-      welcomeScreen.style.transition = 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s';
+      welcomeScreen.style.transition = 'opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.45s';
       welcomeScreen.style.opacity = '0';
       welcomeScreen.style.visibility = 'hidden';
       setTimeout(function() {
         if (welcomeScreen && welcomeScreen.parentNode) {
           welcomeScreen.parentNode.removeChild(welcomeScreen);
         }
-      }, 850);
+      }, 500);
     }
     document.body.style.overflow = '';
     document.documentElement.style.overflow = '';
